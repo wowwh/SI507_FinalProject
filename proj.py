@@ -3,7 +3,7 @@ import json
 import sqlite3 as sqlite
 import plotly.plotly as py
 import plotly.graph_objs as go
-
+from prettytable import PrettyTable
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 
 class Person:
-    def __init__(self,rank='', href='',name='',networth='',age='',source='',country=''):
+    def __init__(self,rank='', href='',name='',networth='',age='',source='',country='',martial='',children='',education=''):
     # def __init__(self,name,age):
         self.rank=rank
         self.href=href
@@ -19,11 +19,63 @@ class Person:
         self.networth=networth
         self.age=age
         self.source=source
-        self.country=country
+        self.country=country        
+        self.martial=martial
+        self.children=children
+        self.education=education
+        
+
+    # def get_detailed(self):
+    #     url='https://www.forbes.com'+self.href
+    #     html = requests.get(url).text
+    #     soup = BeautifulSoup(html, 'html.parser')
+    #     stats=soup.find('div',class_="profile-stats")
+    #     stats=stats.find_all('div',class_='profile-stats__item')        
+    #     try:
+    #         if stats[2].text[:15]=='Self-Made Score':
+    #             flag=1
+    #         else:
+    #             flag=0
+    #     except:
+    #         flag=0
+    #     if flag==1:
+    #         try:
+    #            self.martial=stats[5].text[14:]
+    #         except:
+    #             self.martial=''
+    #         try:
+    #             self.children=stats[6].text[8:]
+    #         except:
+    #             self.children=''
+    #         try:
+    #             self.education=stats[7].text[9:]
+    #         except:
+    #             self.education=''
+    #     else:
+    #         try:
+    #             self.martial=stats[4].text[14:]
+    #         except:
+    #             self.martial=''
+    #         try:
+    #             self.children=stats[5].text[8:]
+    #         except:
+    #             self.children=''
+    #         try:
+    #             self.education=stats[6].text[9:]
+    #         except:
+    #             self.education=''
 
     def __str__(self):
-        return ("#"+str(self.rank)+ ': '+ self.name +' (country:'+self.country+' networth:'+self.networth+ ' age:'+str(self.age)+' source:'+self.source+')')
-        # return(self.name+ ': '+ str(self.age))
+            
+        return ("#"+str(self.rank)+ ': '+ self.name +' (country:'+self.country+'    networth:'+self.networth+ '   age:' + str(self.age)+ '   source:' +self.source+ '   martial:' +self.martial+ '   children:' +self.children+ '   education:' +self.education+')')
+    
+    def printtable(self):
+        x= PrettyTable(['rank','name','country','networth','age','source','martial','children','education'])
+        x.align["rank"] = "l"
+        x.padding_width = 1
+        x.add_row([str(self.rank),self.name,self.country,self.networth,str(self.age),self.source,self.martial,self.children,self.education])
+        print(x)    
+
 
 
 def get_list():
@@ -49,6 +101,10 @@ def get_list():
         people_dict['age']=one.find_all('td')[4].text
         people_dict['source']=one.find_all('td')[5].text
         people_dict['country']=one.find_all('td')[6].text
+        stat_dict=get_detailed_info(people_dict['href'])
+        people_dict['martial']=stat_dict['martial']
+        people_dict['children']=stat_dict['children']
+        people_dict['education']=stat_dict['education']
         people_list.append(people_dict)
         # print(people_dict)
         id+=1
@@ -68,41 +124,27 @@ def get_detailed_info(url):
     stats=soup.find('div',class_="profile-stats")
     stats=stats.find_all('div',class_='profile-stats__item')
     stat_dict=dict()
-    try:
-        if stats[2].text[:15]=='Self-Made Score':
-            flag=1
-        else:
-            flag=0
-    except:
-        flag=0
-    if flag==1:
-        try:
-            stat_dict['martial']=stats[5].text[14:]
-        except:
-            stat_dict['martial']=''
-        try:
-            stat_dict['children']=stats[6].text[8:]
-        except:
-            stat_dict['children']=''
-        try:
-            stat_dict['education']=stats[7].text[9:]
-        except:
-            stat_dict['education']=''
-    else:
-        try:
-            stat_dict['martial']=stats[4].text[14:]
-        except:
-            stat_dict['martial']=''
-        try:
-            stat_dict['children']=stats[5].text[8:]
-        except:
-            stat_dict['children']=''
-        try:
-            stat_dict['education']=stats[6].text[9:]
-        except:
-            stat_dict['education']=''
+
+    stat_dict['martial']=''
+    stat_dict['children']=''
+    stat_dict['education']=''
     
-    print(stat_dict)
+    for stat in stats:
+        title=stat.find('span',class_='profile-stats__title').text
+        if title=='Marital Status':
+            stat_dict['martial']=stat.find('span',class_='profile-stats__text').text
+
+    for stat in stats:
+        title=stat.find('span',class_='profile-stats__title').text
+        if title=='Children':
+            stat_dict['children']=stat.find('span',class_='profile-stats__text').text
+
+    for stat in stats:
+        title=stat.find('span',class_='profile-stats__title').text
+        if title=='Education':
+            stat_dict['education']=stat.find('span',class_='profile-stats__text').text
+
+
     return stat_dict
     
 def create_db(DB_name,LIST):
@@ -153,6 +195,9 @@ def create_db(DB_name,LIST):
                 'age' INTEGER NOT NULL,
                 'source' TEXT NOT NULL,
                 'countryid' INTEGER,
+                'martial' TEXT,
+                'children' TEXT,
+                'education' TEXT,
                 FOREIGN KEY ('countryid') REFERENCES Country('id')
         );
     '''
@@ -160,11 +205,10 @@ def create_db(DB_name,LIST):
 
     for l in LIST:
         statement= '''
-            INSERT INTO 'People' (rank, href,name,networth,age,source,countryid) VALUES (?,?,?,?,?,?,?)
-        '''
-        country_list.index
+            INSERT INTO 'People' (rank, href,name,networth,age,source,countryid,martial,children,education) VALUES (?,?,?,?,?,?,?,?,?,?)
+        '''        
         countryid=country_list.index(l['country'])+1
-        cur.execute(statement, (l['rank'],l['href'],l['name'],l['networth'],l['age'],l['source'],countryid))
+        cur.execute(statement, (l['rank'],l['href'],l['name'],l['networth'],l['age'],l['source'],countryid,l['martial'],l['children'],l['education']))
 
     
 
@@ -209,9 +253,9 @@ def select_by_rank(rank):
     result_list = results.fetchall()
     people_list=[]
     for one_person in result_list:
-        p=Person(one_person[1],one_person[2],one_person[3],one_person[4],one_person[5],one_person[6],one_person[9],)
+        p=Person(one_person[1],one_person[2],one_person[3],one_person[4],one_person[5],one_person[6],one_person[12],one_person[8],one_person[9],one_person[10])
         people_list.append(p)
-        print(p)
+        p.printtable()
     return people_list
 
 def select_all():
@@ -226,10 +270,18 @@ def select_all():
     results=cur.execute(statement)
     result_list = results.fetchall()
     people_list=[]
+    x= PrettyTable(['rank','name','country','networth','age','source','martial','children','education'])
+    x.align["rank"] = "l"
+    x.align["education"] = "l"
+    x.padding_width = 1
     for one_person in result_list:
-        p=Person(one_person[1],one_person[2],one_person[3],one_person[4],one_person[5],one_person[6],one_person[9],)
+        p=Person(one_person[1],one_person[2],one_person[3],one_person[4],one_person[5],one_person[6],one_person[12],one_person[8],one_person[9],one_person[10])
         people_list.append(p)
-        print(p)
+        
+        x.add_row([str(p.rank),p.name,p.country,p.networth,str(p.age),p.source,p.martial,p.children,p.education])
+        
+        # print(p)
+    print(x)
     return people_list
 
 
@@ -250,7 +302,7 @@ def plot_networth(LI):
                 x=x_list,
                 y=y_list
         )]    
-    py.plot(data, filename='networth-bar', auto_open=True)
+    py.iplot(data, filename='networth-bar', auto_open=True)
 
 def plot_networth_by_country(people_list):
     x_list=[]
@@ -262,7 +314,7 @@ def plot_networth_by_country(people_list):
                 x=x_list,
                 y=y_list
         )]    
-    py.plot(data, filename='country-networth-bar', auto_open=True)
+    py.iplot(data, filename='country-networth-bar', auto_open=True)
 
 
 def plot_age(people_list):
@@ -275,7 +327,7 @@ def plot_age(people_list):
                 x=x_list,
                 y=y_list
         )]    
-    py.plot(data, filename='age-bar', auto_open=True)
+    py.iplot(data, filename='age-bar', auto_open=True)
 
 
 def plot_number(LI):
@@ -294,7 +346,7 @@ def plot_number(LI):
                 x=x_list,
                 y=y_list
         )]    
-    py.plot(data, filename='number-bar', auto_open=True)
+    py.iplot(data, filename='number-bar', auto_open=True)
 
 
 def plot_wordcloud(LI):
@@ -314,6 +366,8 @@ def plot_wordcloud(LI):
 
 
 if __name__ == "__main__":
+
+    
     CACHE_FNAME = 'cache.json'
     DB_name='proj.sqlite'
     try:
@@ -321,7 +375,7 @@ if __name__ == "__main__":
         cache_contents = cache_file.read()
         CACHE= json.loads(cache_contents)
         cache_file.close()
-    # if there was no file, no worries. There will be soon!
+    
     except:
         CACHE= get_list()
         dumped_json_cache = json.dumps(CACHE,indent=4)

@@ -5,13 +5,28 @@ class TestData(unittest.TestCase):
 
     def testlist(self):
 
-        people_list=get_list()
-        country_list=get_country_list(people_list)
-        last={'id': 200, 'rank': '198 ', 'href': '/profile/patrick-soon-shiong/?list=billionaires', 'name': 'Patrick Soon-Shiong', 'networth': '$7.8 B', 'age': '66', 'source': 'pharmaceuticals', 'country': 'United States'}
+        CACHE_FNAME = 'cache.json'
+        DB_name='proj.sqlite'
+        try:
+            cache_file = open(CACHE_FNAME, 'r')
+            cache_contents = cache_file.read()
+            CACHE= json.loads(cache_contents)
+            cache_file.close()
         
+        except:
+            CACHE= get_list()
+            dumped_json_cache = json.dumps(CACHE,indent=4)
+            file_cache=open(CACHE_FNAME,'w')
+            file_cache.write(dumped_json_cache)
+            file_cache.close()
+            
+        people_list=CACHE
+
+        country_list=get_country_list(people_list)
+                
         self.assertEqual(len(people_list), 200)
         self.assertEqual(len(country_list), 33)
-        self.assertEqual(people_list[-1], last)
+        self.assertEqual(people_list[-1]['children'], '2')
 
 
         p_list=fetch_data_by_country('proj.sqlite','China')
@@ -96,7 +111,22 @@ class TestDB(unittest.TestCase):
 
 class TestPlot(unittest.TestCase):    
     def test_plot(self):
-        people_list=get_list()
+        CACHE_FNAME = 'cache.json'
+        DB_name='proj.sqlite'
+        try:
+            cache_file = open(CACHE_FNAME, 'r')
+            cache_contents = cache_file.read()
+            CACHE= json.loads(cache_contents)
+            cache_file.close()
+        
+        except:
+            CACHE= get_list()
+            dumped_json_cache = json.dumps(CACHE,indent=4)
+            file_cache=open(CACHE_FNAME,'w')
+            file_cache.write(dumped_json_cache)
+            file_cache.close()
+
+        people_list=CACHE
         try:
             plot_number(people_list)            
         except:
