@@ -4,6 +4,9 @@
 [![The World's Billionaires]](https://www.forbes.com/billionaires/list/)
 [![https://www.forbes.com/billionaires/list/]](https://www.forbes.com/billionaires/list/)
 
+
+
+## Information
 Since the website uses js scripts to generate the result shown on the website, we cannot use crawling directly. Here I use selenium and 
 chromedriver to simulate the process of using chrome and get data from that. Hence when running the program, chromedriver.exe must be put in the same folder with proj.py.
 
