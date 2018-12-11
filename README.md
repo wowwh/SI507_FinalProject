@@ -48,7 +48,7 @@ User can input the following command:
 * networth
     * available anytime
     * display the barchart of sum of all billionaires's networth in each country 
-* networth <country>
+* networth \<country\>
     * available anytime
     * display the barchart of all billionaires's networth in the user selected country
 * number
