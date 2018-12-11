@@ -1,8 +1,8 @@
 # SI507_FinalProject
 
 ## Data source
-[![The World's Billionaires]](https://www.forbes.com/billionaires/list/)
-[![https://www.forbes.com/billionaires/list/]](https://www.forbes.com/billionaires/list/)
+[[The World's Billionaires]](https://www.forbes.com/billionaires/list/)
+[[https://www.forbes.com/billionaires/list/]](https://www.forbes.com/billionaires/list/)
 
 
 
