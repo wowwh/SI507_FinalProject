@@ -35,7 +35,7 @@ chromedriver to simulate the process of using chrome and get data from that. Hen
     
 ## User Guide
 User can input the following command:
-* rank <rank>
+* rank \<rank\>
     * available anytime
     * return the millionaire with the rank closest to the input rank
     * <rank> should be from 1 to 200
@@ -54,7 +54,7 @@ User can input the following command:
 * number
     * available anytime
     * display the barchart of the number billionaires in each country 
-* age <country>
+* age \<country\>
     * available anytime
     * display the barchart of all billionaires' age in the country input by user
 * rebuild database
