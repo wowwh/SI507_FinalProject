@@ -34,7 +34,7 @@ chromedriver to simulate the process of using chrome and get data from that. Hen
 User can input the following command:
 * rank <rank>
     * available anytime
-    * return the millionaire with the rank closest rank
+    * return the millionaire with the rank closest to the input rank
     * <rank> should be from 1 to 200
 * list
     * available anytime
