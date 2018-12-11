@@ -32,33 +32,33 @@ chromedriver to simulate the process of using chrome and get data from that. Hen
     
 ## User Guide
 User can input the following command:
-rank <rank>
-    available anytime
-    return the millionaire with the rank closest rank
-    <rank> should be from 1 to 200
-list
-    available anytime
-    lists all 2018 top 200 millionaires 
-wordcloud
-    available anytime
-    display the wordcloud made by the source of all the billionaires
-networth
-    available anytime
-    display the barchart of sum of all billionaires's networth in each country 
-networth <country>
-    available anytime
-    display the barchart of all billionaires's networth in the user selected country
-number
-    available anytime
-    display the barchart of the number billionaires in each country 
-age <country>
-    available anytime
-    display the barchart of all billionaires' age in the country input by user
-rebuild database
-    available anytime
-    rebuild the database with cache
-exit
-    exits the program
-help
-    lists available commands (these instructions) 
+* rank <rank>
+    * available anytime
+    * return the millionaire with the rank closest rank
+    * <rank> should be from 1 to 200
+* list
+    * available anytime
+    * lists all 2018 top 200 millionaires 
+* wordcloud
+    * available anytime
+    * display the wordcloud made by the source of all the billionaires
+* networth
+    * available anytime
+    * display the barchart of sum of all billionaires's networth in each country 
+* networth <country>
+    * available anytime
+    * display the barchart of all billionaires's networth in the user selected country
+* number
+    * available anytime
+    * display the barchart of the number billionaires in each country 
+* age <country>
+    * available anytime
+    * display the barchart of all billionaires' age in the country input by user
+* rebuild database
+    * available anytime
+    * rebuild the database with cache
+* exit
+    * exits the program
+* help
+    * lists available commands (these instructions) 
   
