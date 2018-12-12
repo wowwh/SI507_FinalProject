@@ -302,7 +302,7 @@ def plot_networth(LI):
                 x=x_list,
                 y=y_list
         )]    
-    py.iplot(data, filename='networth-bar', auto_open=True)
+    py.plot(data, filename='networth-bar', auto_open=True)
 
 def plot_networth_by_country(people_list):
     x_list=[]
@@ -314,7 +314,7 @@ def plot_networth_by_country(people_list):
                 x=x_list,
                 y=y_list
         )]    
-    py.iplot(data, filename='country-networth-bar', auto_open=True)
+    py.plot(data, filename='country-networth-bar', auto_open=True)
 
 
 def plot_age(people_list):
@@ -327,7 +327,7 @@ def plot_age(people_list):
                 x=x_list,
                 y=y_list
         )]    
-    py.iplot(data, filename='age-bar', auto_open=True)
+    py.plot(data, filename='age-bar', auto_open=True)
 
 
 def plot_number(LI):
@@ -346,7 +346,7 @@ def plot_number(LI):
                 x=x_list,
                 y=y_list
         )]    
-    py.iplot(data, filename='number-bar', auto_open=True)
+    py.plot(data, filename='number-bar', auto_open=True)
 
 
 def plot_wordcloud(LI):
